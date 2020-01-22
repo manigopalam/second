@@ -16,6 +16,11 @@
 			{
 				"name": "NAME",
 				"type": "varchar"
+			},
+			{
+				"name": "ID",
+				"type": "int",
+				"precision": 10
 			}
 		],
 		"typeProperties": {
