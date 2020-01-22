@@ -30,16 +30,19 @@
 			],
 			"transformations": [
 				{
-					"name": "Lookup1"
+					"name": "Lookup"
 				},
 				{
-					"name": "ConditionalSplit"
+					"name": "manikanta"
 				},
 				{
 					"name": "SurrogateKey"
+				},
+				{
+					"name": "Select1"
 				}
 			],
-			"script": "\n\nsource(output(\n\t\tID as integer,\n\t\tNAME as string,\n\t\tSAL as decimal(19,4)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> source1\nsource(output(\n\t\tPKEY as integer,\n\t\tNAME as string,\n\t\tID as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> source2\nsource1, source2 lookup(source1@ID == source2@ID,\n\tbroadcast: 'none')~> Lookup1\nLookup1 split(isMatch(),\n\tdisjoint: false) ~> ConditionalSplit@(MATCH, NON-MATCH)\nConditionalSplit@NON-MATCH keyGenerate(output(newhjgf as long),\n\tstartAt: 1L) ~> SurrogateKey\nSurrogateKey sink(input(\n\t\tPKEY as integer,\n\t\tNAME as string,\n\t\tID as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tmapColumn(\n\t\tPKEY,\n\t\tNAME = ConditionalSplit@NON-MATCH@NAME,\n\t\tID = ConditionalSplit@NON-MATCH@ID\n\t)) ~> sink1"
+			"script": "\n\nsource(output(\n\t\tID as integer,\n\t\tNAME as string,\n\t\tSAL as decimal(19,4)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> source1\nsource(output(\n\t\tPKEY as integer,\n\t\tNAME as string,\n\t\tID as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> source2\nsource1, source2 lookup(source1@ID == source2@ID,\n\tbroadcast: 'none')~> Lookup\nLookup split(isMatch(),\n\tdisjoint: false) ~> manikanta@(MATCH, NON-MATCH)\nSelect1 keyGenerate(output(newhjgf as long),\n\tstartAt: 1L) ~> SurrogateKey\nmanikanta@NON-MATCH select(mapColumn(\n\t\tID = manikanta@NON-MATCH@ID,\n\t\tNAME = manikanta@NON-MATCH@NAME\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSurrogateKey sink(input(\n\t\tPKEY as integer,\n\t\tNAME as string,\n\t\tID as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tmapColumn(\n\t\tNAME,\n\t\tID,\n\t\tPKEY = newhjgf\n\t)) ~> sink1"
 		}
 	}
 }
