@@ -1,0 +1,56 @@
+{
+	"name": "AzureSqlTable5",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "EMPNO",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ENAME",
+				"type": "varchar"
+			},
+			{
+				"name": "JOB",
+				"type": "varchar"
+			},
+			{
+				"name": "MGR",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "HIREDATE",
+				"type": "date"
+			},
+			{
+				"name": "SAL",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "COMM",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "DEPTNO",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "EMP"
+		}
+	}
+}
